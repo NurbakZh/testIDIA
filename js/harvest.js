@@ -77,7 +77,9 @@ const data = [
 
 let computerChairList = document.getElementById('computerChairList_____SHOW');
 
-displayList(data, computerChairList);
+sortBy(data, "priceAsc");
+
+//displayList(data, computerChairList);
 
 function displayList(array, uniqId) {
 
@@ -117,8 +119,53 @@ function displayList(array, uniqId) {
         </div>
         `;
 
+        const productItemPriceCost = productItem.querySelector('.product_item_price_btn');
+        productItemPriceCost.addEventListener('click', function () {
+            const newItem = {
+                id: a.code,
+                img: a.img,
+                name: a.title,
+                price: Number(a.price),
+                quantity: 1
+            };
+            addToCart(newItem);
+        });
+
         uniqId.appendChild(productItem);
 
     });
 
 }
+
+function sortBy(array, method) {
+    switch(method) {
+        // Ascending - возрастание цены
+        case 'priceAsc':
+            displayList(array.sort((a, b) => Number(a.price) - Number(b.price)), computerChairList);
+            break;
+
+        // Descending - снижение цены
+        case 'priceDes':
+            displayList(array.sort((a, b) => Number(b.price) - Number(a.price)), computerChairList);
+            break;
+
+        case 'code':
+            displayList(array.sort((a, b) => a.code.localeCompare(b.code)), computerChairList);
+            break;
+
+        case 'name':
+            displayList(array.sort((a, b) => a.title.localeCompare(b.title)), computerChairList);
+            break;
+
+        default: 
+            displayList(array.sort((a, b) => Number(a.price) - Number(b.price)), computerChairList);
+    }
+}
+
+const sortingOption = document.querySelector('.sorting_option');
+sortingOption.addEventListener('click', function(event) {
+    if (event.target.tagName === 'LI') {
+        const method = event.target.getAttribute('sortBy');
+        sortBy(data, method);
+    }
+});
